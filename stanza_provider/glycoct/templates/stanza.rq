@@ -1,0 +1,15 @@
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?GlycoCT
+WHERE {
+  # Accession Number
+  VALUES ?accNum {"{{accessionNumber}}"}
+  ?saccharide glytoucan:has_primary_id ?accNum .
+
+  # GlycoCT
+  ?saccharide glycan:has_glycosequence ?gctSeq .
+  ?gctSeq glycan:has_sequence ?seq .
+  BIND(STR(?seq) AS ?GlycoCT)
+  ?gctSeq glycan:in_carbohydrate_format glycan:carbohydrate_format_glycoct .
+}

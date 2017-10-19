@@ -1,0 +1,18 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bibo: <http://purl.org/ontology/bibo/>
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?from ?pubmed_id ?pubmed_url
+WHERE{
+	VALUES ?accNum {"{{accessionNumber}}"}
+	?saccharide  glytoucan:has_primary_id ?accNum .
+
+	GRAPH ?graph {
+		?saccharide dcterms:references ?article .
+		?article a bibo:Article .
+		?article dcterms:identifier ?pubmed_id .
+		?article rdfs:seeAlso ?pubmed_url .
+	}
+	?graph rdfs:label ?from .
+} ORDER by ?from

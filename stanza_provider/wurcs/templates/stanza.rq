@@ -1,0 +1,15 @@
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?WURCS_label
+WHERE {
+  # Accession Number
+  VALUES ?accNum {"{{accessionNumber}}"}
+  ?saccharide glytoucan:has_primary_id ?accNum .
+
+  # WURCS
+  ?saccharide glycan:has_glycosequence ?wcsSeq .
+  ?wcsSeq rdfs:label ?wcsLabel .
+  BIND(STR(?wcsLabel) AS ?WURCS_label)
+  ?wcsSeq glycan:in_carbohydrate_format glycan:carbohydrate_format_wurcs .
+}

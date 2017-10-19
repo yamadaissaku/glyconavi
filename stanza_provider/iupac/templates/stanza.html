@@ -1,0 +1,49 @@
+<style>
+main {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.iupac {
+	padding: 0;
+}
+
+pre {
+	display: block;
+	margin: 0 0 0 20px;
+	padding: 10px;
+	border: solid 1px #CCC;
+	background: #FFF;
+	word-break: break-all;
+	white-space: normal;
+}
+
+code {
+	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.stanzaNothingFound {
+	width: 100%;
+	float: none;
+	margin: 0 0 10px;
+	padding: 5px 0;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+</style>
+<div class="iupac">
+	{{#each data}}
+		<pre><code>{{IUPAC.value}}</code></pre>
+	{{/each}}
+	{{#iupacNothingFound data}}{{/iupacNothingFound}}
+</div>

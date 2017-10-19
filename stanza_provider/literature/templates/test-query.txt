@@ -1,0 +1,16 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bibo: <http://purl.org/ontology/bibo/>
+
+SELECT DISTINCT ?from ?pubmed_id ?pubmed_url
+WHERE{
+	VALUES ?accNum {"G00051MO"}
+	?saccharide  glytoucan:has_primary_id ?accNum .
+
+	GRAPH ?graph {
+		?saccharide dcterms:references ?article .
+		?article a bibo:Article .
+		?article dcterms:identifier ?pubmed_id .
+		?article rdfs:seeAlso ?pubmed_url .
+	}
+	?graph rdfs:label ?from .
+} ORDER by ?from

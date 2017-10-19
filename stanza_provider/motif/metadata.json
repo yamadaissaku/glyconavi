@@ -1,0 +1,34 @@
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "motif",
+  "stanza:label": "Glycan motif",
+  "stanza:definition": "Motif list of glycan",
+  "stanza:parameter": [
+    {
+      "stanza:key": "acc",
+      "stanza:example": "G00051MO",
+      "stanza:description" : "Glycan accession number",
+      "stanza:required": true
+    },
+    {
+      "stanza:key": "notation",
+      "stanza:example": "cfg",
+      "stanza:description" : "Structure notation",
+      "stanza:required": true
+    }
+  ],
+  "stanza:usage": "<togostanza-motif acc=\"G00051MO\" notation=\"cfg\"></togostanza-motif>",
+  "stanza:type": "Stanza",
+  "stanza:context": "",
+  "stanza:display": "",
+  "stanza:provider": "provider of this stanza",
+  "stanza:license": "",
+  "stanza:author": "author name",
+  "stanza:address": "name@example.org",
+  "stanza:contributor": [
+  ],
+  "stanza:created": "2016-04-14",
+  "stanza:updated": "2016-04-14"
+}

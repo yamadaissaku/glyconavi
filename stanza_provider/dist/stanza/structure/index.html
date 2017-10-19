@@ -1,0 +1,202 @@
+<script src="../assets/components/jquery/dist/jquery.min.js"></script>
+<script src="../assets/components/handlebars/handlebars.min.js"></script>
+<script>
+(function(descriptor) {
+  function Stanza(execute) {
+  var proto = Object.create(HTMLElement.prototype);
+  var development = descriptor.development;
+
+  function template(name) {
+    var t = descriptor.templates[name];
+    if (!t) {
+      throw new Error("template \"" + name + "\" is not found");
+    }
+    return t;
+  }
+
+  function createStanzaHelper(element) {
+    return {
+      query: function(params) {
+        if (development) {
+          console.log("query: called", params);
+        }
+        var t = template(params.template);
+        var queryTemplate = Handlebars.compile(t, {noEscape: true});
+        var query = queryTemplate(params.parameters);
+
+        if (development) {
+          console.log("query: query built:\n" + query);
+          console.log("query: sending to", params.endpoint);
+        }
+
+        var p = $.ajax({
+          url: params.endpoint,
+          headers: {
+            "Accept": "application/sparql-results+json"
+          },
+          data: {
+            query: query
+          }
+        });
+
+        if (development) {
+          p.then(function(value, textStatus) {
+            console.log("query:", textStatus, "data", value);
+          });
+        }
+
+        return p;
+      },
+      render: function(params) {
+        if (development) {
+          console.log("render: called", params)
+        }
+        var t = template(params.template);
+        var htmlTemplate = Handlebars.compile(t);
+        var htmlFragment = htmlTemplate(params.parameters);
+        if (development) {
+          console.log("render: built:\n", htmlFragment)
+        }
+        var selector = params.selector || "main";
+        $(selector, element.shadowRoot).html(htmlFragment);
+        if (development) {
+          console.log("render: wrote to \"" + selector + "\"")
+        }
+      },
+      root: element.shadowRoot,
+      select: function(selector) {
+        return this.root.querySelector(selector);
+      },
+      selectAll: function(selector) {
+        return this.root.querySelectorAll(selector);
+      },
+      grouping: function(rows /* , ...keys */) {
+        var _this = this;
+
+        var normalizedKeys = Array.prototype.slice.call(arguments, 1).reduce(function(acc, key) {
+          if (key instanceof Array) {
+            return acc.concat({key: key, alias: key.join('_')});
+          } else if (key instanceof Object) {
+            return acc.concat(key);
+          } else {
+            return acc.concat({key: key, alias: key});
+          }
+        }, []);
+
+        return (function(rows, keys) {
+          function fetch(row, key) {
+            if (key instanceof Array) {
+              return key.map(function(k) {
+                return row[k];
+              });
+            } else {
+              return row[currentKey.key]
+            }
+          }
+
+          var callee     = arguments.callee;
+          var currentKey = keys[0];
+
+          if (keys.length === 1) return rows.map(function(row) { return fetch(row, currentKey.key) });
+
+          return _this.groupBy(rows, function(row) {
+            return fetch(row, currentKey.key);
+          }).map(function(group) {
+            var currentValue = group[0];
+            var remainValues = group[1];
+            var remainKeys   = keys.slice(1);
+            var nextKey      = remainKeys[0];
+            var ret          = {};
+
+            ret[currentKey.alias] = currentValue;
+            ret[nextKey.alias]    = callee(remainValues, remainKeys)
+
+            return ret;
+          });
+        })(rows, normalizedKeys);
+      },
+      groupBy: function(array, func) {
+        var ret = [];
+
+        array.forEach(function(item) {
+          var key = func(item);
+
+          var entry = ret.filter(function(e) {
+            return e[0] === key;
+          })[0];
+
+          if (entry) {
+            entry[1].push(item);
+          } else {
+            ret.push([key, [item]]);
+          }
+        });
+
+        return ret;
+      },
+      unwrapValueFromBinding: function(queryResult) {
+        var bindings = queryResult.results.bindings;
+
+        return bindings.map(function(binding) {
+          var ret = {};
+
+          Object.keys(binding).forEach(function(key) {
+            ret[key] = binding[key].value;
+          });
+
+          return ret;
+        });
+      }
+    };
+  }
+
+  function update(element) {
+    var params = {};
+    descriptor.parameters.forEach(function(key) {
+      params[key] = element.getAttribute(key);
+    });
+    execute(createStanzaHelper(element), params);
+  }
+
+  proto.createdCallback = function() {
+    var shadow = this.createShadowRoot();
+
+    var style = document.createElement("style");
+    style.appendChild(document.createTextNode(descriptor.stylesheet));
+    shadow.appendChild(style);
+    var main = document.createElement("main");
+    shadow.appendChild(main);
+
+    update(this);
+  };
+
+  proto.attributeChangedCallback = function(attrName, oldVal, newVal) {
+    var found = false;
+    descriptor.parameters.forEach(function(key) {
+      if (attrName == key) {
+        found = true;
+      }
+    });
+    if (found) {
+      update(this);
+    }
+  };
+
+  document.registerElement(descriptor.elementName, {
+    prototype: proto
+  });
+};
+
+  'use strict';
+
+Stanza(function (stanza, params) {
+  stanza.render({
+    template: "stanza.html",
+    parameters: {
+      acc: params.acc,
+    },
+  });
+});
+
+})({"templates":{"stanza.html":"\u003cstyle\u003e\nmain {\n\t-webkit-box-shadow: none;\n\tbox-shadow: none;\n}\n\n.structureImg {\n\tposition: relative;\n\tpadding: 5px 0 0;\n}\n\nimg {\n\tdisplay: block;\n\tmin-height: 40px;\n}\n\nimg:after {\n  content: \"No image file found.\";\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 0;\n  width: 100%;\n  height: auto;\n  padding: 10px 0;\n  border: dashed 1px #999;\n  background: #EEE;\n  color: #999;\n  font-size: 14px;\n  line-height: 1;\n  font-weight: bold;\n  text-align: center;\n  z-index: 2;\n  box-sizing: border-box;\n}\n\u003c/style\u003e\n\u003cdiv class=\"structureImg\"\u003e\n  \u003cimg src=\"/glycans/{{acc}}/image?style=extended\u0026amp;format=png\u0026amp;notation=iupac\" alt=\"Structure image for {{acc}}\" /\u003e\n  \u003c!-- \u003cimg src=\"https://glytoucan.org/glycans/{{acc}}/image?style=extended\u0026amp;format=png\u0026amp;notation=iupac\" alt=\"Structure image for {{acc}}\" /\u003e --\u003e\n\u003c/div\u003e\n"},"parameters":["acc"],"elementName":"togostanza-structure","stylesheet":"@charset \"UTF-8\";\n\n* {\n  background-color: transparent;\n  padding: 1px 2px 3px;\n  font-family: \"Myriad Pro\",\"Helvetica Neue\",san-serif;\n  font-size: 16px;\n  line-height: 20px;\n}\na {\n  color:#45b8cc;\n}\n\nul, ol {\n  padding:0;\n  margin:0 0 0 16px;\n}\ndl {\n  margin: 0;\n  padding: 0;\n}\ndd {\n  margin: 0;\n}\ndt + dt, dd + dt,\ndt + dd, dd + dd {\n  margin-top: 8px;\n}\n\n\nmain {\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n  -webkit-box-shadow: 0 2px 2px rgba(0,0,0,.2);\n  -moz-box-shadow: 0 2px 2px rgba(0,0,0,.2);\n  box-shadow: 0 2px 2px rgba(0,0,0,.2);\n  background-color: #fff;\n  overflow: auto;\n}\n.table + .table, .table + div,\ndiv + .table, div + div {\n  margin-top: 5px;\n}\n\ndiv {\n  padding: 10px 20px;\n}\n\n.table {\n  border-style: solid;\n  border-color: #fff;\n  border-top-width: 5px;\n  border-bottom-width: 5px;\n  border-left-width: 20px;\n  border-right-width: 20px;\n}\n.table {\n  margin-bottom: 0;\n  word-break:break-all;\n}\n.table caption {\n  background-color: #8ac8d1;\n  text-align: left;\n  color: white;\n  font-size: 18px;\n  line-height: 22px;\n  height: 22px;\n  font-weight: bold;\n  padding: 10px 24px 4px;\n  margin: 0;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.table thead th, .table thead td {\n  border-bottom: 1px solid #555;\n}\n.table th, .table td,\n.table \u003e tth, .table \u003e ttd {\n  padding: 10px 4px;\n  line-height: 20px;\n  text-align: left;\n  vertical-align: top;\n  border-top: 1px solid #9fadad;\n}\n.table \u003e tr:first-child \u003e th, .table \u003e tr:first-child \u003e td,\n.table \u003e ttr:first-child \u003e th, .table \u003e ttr:first-child \u003e td {\n  border-top: none;\n}\nth \u003e .table, td \u003e .table {\n  margin: -10px -4px;\n  width: 100%;\n}\n.table li + li {\n  margin-top: 4px;\n}\ntd.numeric {\n  text-align: right;\n}\nth.nowrap,\ntd.nowrap {\n  white-space: nowrap;\n}\n\npre {\n  background-color:#daf1f5;\n  border:1px solid #ccc;\n  border:1px solid rgba(0,0,0,0.15);\n  padding: 8px 16px;\n}\n\n/* grid */\n.span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 {\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.span1 { width: 8.3333%; }\n.span2 { width: 16.6666%; }\n.span3 { width: 25%; }\n.span4 { width: 33.3333%; }\n.span5 { width: 41.6666%; }\n.span6 { width: 50%; }\n.span7 { width: 58.3333%; }\n.span8 { width: 66.6666%; }\n.span9 { width: 75%; }\n.span10 { width: 83.3333%; }\n.span11 { width: 91.6666%; }\n.span12 { width: 100%; }\n\ndiv#stanza_buttons {\n  margin: 0 0;\n  padding: 0 0;\n}\n\n/* tool bar */\n/* line 134, ../sass/stanza.scss */\n#tool_bar {\n  margin-top: 0;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  font-size: 12px;\n  line-height: 30px;\n  color: #999;\n  background-color: #fff;\n  padding-top: 2px;\n  border-top: dashed 1px #ccc;\n  /*@include box-shadow(0 1px 2px rgba(0, 0, 0, 0.2), inset 0 10px 8px -8px rgba(0, 0, 0, 0.12));*/\n  z-index: 1000;\n  position: relative;\n}\n/* line 145, ../sass/stanza.scss */\n#tool_bar a {\n  color: #45b8cc;\n  margin-right: 1.5em;\n}\n/* line 148, ../sass/stanza.scss */\n#tool_bar a:hover {\n  color: #005580;\n}\n/* line 152, ../sass/stanza.scss */\n#tool_bar p {\n  margin-bottom: 0;\n}\n/* line 155, ../sass/stanza.scss */\n#tool_bar:before, #tool_bar:after {\n  display: table;\n  line-height: 0;\n  content: \"\";\n}\n/* line 160, ../sass/stanza.scss */\n#tool_bar:after {\n  clear: both;\n}\n","development":true});
+</script>

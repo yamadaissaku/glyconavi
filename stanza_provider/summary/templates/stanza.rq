@@ -1,0 +1,33 @@
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?AccNum ?Mass_label ?IUPAC_Extended ?CreateDate
+WHERE {
+  # Accession Number
+  VALUES ?AccNum {"{{accessionNumber}}"}
+  ?saccharide glytoucan:has_primary_id ?AccNum .
+
+  # Mass
+  OPTIONAL{
+    ?saccharide glytoucan:has_derivatized_mass ?dmass .
+    ?dmass rdfs:label ?msLabel .
+    BIND(STR(?msLabel) AS ?Mass_label) .
+  }
+
+  # Sequence
+  # IUPAC Extended 
+  OPTIONAL{
+    ?saccharide glycan:has_glycosequence ?iupSeq .
+    ?iupSeq glycan:has_sequence ?seq .
+    BIND(STR(?seq) AS ?IUPAC_Extended)
+    ?iupSeq glycan:in_carbohydrate_format glycan:carbohydrate_format_iupac_extended .
+  }
+
+  # Contributor
+  OPTIONAL{
+    ?saccharide glycan:has_resource_entry ?res .
+    ?res a glycan:resource_entry .
+    ?res glytoucan:date_registered ?date .
+    BIND(STR(?date) AS ?CreateDate)
+  }
+}

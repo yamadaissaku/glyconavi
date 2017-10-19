@@ -1,0 +1,128 @@
+<style>
+
+main {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.motifList {
+	margin: 10px -5px 0;
+	list-style: none;
+}
+
+.motifList:before, .motifList:after {
+	content: " ";
+	display: table;
+}
+
+.motifList:after {
+	clear: both;
+}
+
+.motifList > li {
+	width: 33.33333%;
+	float: left;
+	margin: 0 0 10px;
+	padding: 0 5px;
+	box-sizing: border-box;
+}
+
+.motifList > li.stanzaNothingFound {
+	width: 100%;
+	float: none;
+	margin: 0 0 10px;
+	padding: 5px 0;
+	background: #EEE;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.motifList_item {
+	padding: 0;
+	background: #FFF;
+	-webkit-box-shadow: 0px 0px 3px 1px #DDD;
+	box-shadow: 0px 0px 3px 1px #DDD;
+}
+
+.motifList_header {
+	height: 40px;
+	padding: 5px 10px;
+	border-bottom: solid 1px #09D;
+	white-space: nowrap;
+}
+
+.motifList_header:after {
+	content: "";
+	display: inline-block;
+	width: 1px;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.motifList_name {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1.2;
+	white-space: normal;
+	vertical-align: middle;
+}
+
+.motifList_img {
+	height: 150px;
+	padding: 0;
+}
+
+.motifList_img > img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+}
+
+.motifList_meta {
+	margin: 5px 0 0;
+	padding: 10px;
+	line-height: 1.2;
+}
+
+.motifList_acc {
+	color: #09D;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.motifList_num {
+	color: #09D;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+</style>
+<ul class="motifList">
+{{#each data}}
+	<li>
+		<div class="motifList_item">
+			<div class="motifList_header">
+				<p class="motifList_name">{{MotifName.value}}</p>
+			</div>
+			<div class="motifList_img">
+				<img src="/glycans/{{moAccNum.value}}/image?style=extended&amp;format=png&amp;notation={{notation}}" alt="{{moAccNum.value}} / {{MotifName.value}}" />
+			</div>
+ 			<!--<div class="motifList_meta">
+				<span class="motifList_acc">Accession Number</span><br />
+				<a class="motifList_num" href="http://glytoucan.org/Structures/Glycans/{{moAccNum.value}}">{{moAccNum.value}}</a>
+			</div>-->
+		</div>
+	</li>
+{{/each}}
+{{#motifNothingFound data}}{{/motifNothingFound}}
+</ul>

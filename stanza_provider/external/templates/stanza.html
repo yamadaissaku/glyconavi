@@ -1,0 +1,101 @@
+<style>
+
+main {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.externalList {
+	margin: 10px 0 0;
+	padding: 0;
+	font-size: 14px;
+	list-style-type: none;
+}
+
+.externalList > li.stanzaNothingFound {
+	width: 100%;
+	float: none;
+	margin: 0 0 10px;
+	padding: 5px 0;
+	background: #EEE;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.externalList > li:before, .externalList > li:after {
+	content: " ";
+	display: table;
+}
+
+.externalList > li:after {
+	clear: both;
+}
+
+.externalList > li + li {
+	margin: 20px 0 0;
+	padding: 0;
+}
+
+.externalList_heading {
+	width: 20%;
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+
+.externalList_category {
+	width: 80%;
+	margin: 0;
+	float: left;
+	list-style-type: disc;
+}
+
+.externalList_category:before, .externalList_category:after {
+	content: " ";
+	display: table;
+}
+
+.externalList_category:after {
+	clear: both;
+}
+
+.externalList_category > li {
+	min-width: 100px;
+	margin: 0 15px 0 0;
+	float: left;
+	line-height: 2;
+}
+
+.externalList_category > li > a {
+	color: #09D;
+	text-decoration: underline;
+}
+
+.externalList_from {
+	margin: 15px 0 0;
+	padding: 0;
+	text-align: right;
+	font-size: 14px;
+}
+
+</style>
+<ul class="externalList">
+{{#each data}}
+	<li>
+		<p class="externalList_heading">{{this.label}}</p>
+		<ul class="externalList_category">
+		{{#each this.list}}
+			<li>
+				<a href="{{{url}}}" target="_blank">{{id}}</a>
+			</li>
+		{{/each}}
+		</ul>
+		<p class="externalList_from">from {{this.from}}</p>
+	</li>
+{{/each}}
+{{#externalNothingFound data}}{{/externalNothingFound}}
+</ul>

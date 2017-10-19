@@ -1,0 +1,102 @@
+<style>
+main {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.glyconavi {
+	padding: 0;
+}
+
+pre {
+	display: block;
+	margin: 0 0 0 20px;
+	padding: 10px;
+	border: solid 1px #CCC;
+	background: #FFF;
+	word-break: break-all;
+	white-space: normal;
+}
+
+code {
+	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.stanzaNothingFound {
+	width: 100%;
+	float: none;
+	margin: 0 0 0 20px;
+	padding: 10px;
+	background: #EEE;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+.invisible{
+	display: none;
+}
+.hide {
+	display:none;
+}
+div.foot {
+	font-size: 14px;
+	text-align: right;
+}
+
+</style>
+<div class="glyconavi">
+	
+<div>
+<form>
+
+
+<div><a>Link of carbohydrate structure based on WURCS.</a></div>
+
+<!-- http://wataame.sumomo.ne.jp/archives/1910 -->
+<!--
+<p class="glyconavi_table_radio">
+<input type="radio" name="databasetype" value="1" checked="checked" >PDBj
+<input type="radio" name="databasetype" value="2" >PDBe
+<input type="radio" name="databasetype" value="3" >RCSB PDB
+</p>
+-->
+
+
+PDBj Chemical Component
+<br>
+{{#each data}}
+		<a class="pdbj" href="http://pdbj.org/chemie/summary/{{ccid.value}}" target="_blank">{{ccid.value}}</a><a> </a>
+{{/each}}
+<br>
+PDBe Chemical Component
+<br>
+{{#each data}}
+		<a class="pdbe" href="http://www.ebi.ac.uk/pdbe-srv/pdbechem/chemicalCompound/show/{{ccid.value}}" target="_blank">{{ccid.value}}</a><a> </a>
+{{/each}}
+<br>
+RCSB PDB Chemical Component
+<br>
+{{#each data}}
+		<a class="rcsb" href="http://www.rcsb.org/pdb/ligand/ligandsummary.do?hetId={{ccid.value}}" target="_blank">{{ccid.value}}</a><a> </a>
+{{/each}}
+
+{{#glyconaviNothingFound data}}{{/glyconaviNothingFound}}
+<!-- 表示非表示切り替え -->
+
+<br>
+<div class="foot">
+<a href="http://glyconavi.org" target="_blank">from GlycoNAVI</a>
+</div>
+
+</form>
+</div>
+</div>

@@ -1,0 +1,11 @@
+SELECT distinct str (?id ) AS ?ccid ?accNum
+FROM <http://glycoinfo.org/database/pdb>
+WHERE { 
+?resource <http://purl.org/dc/terms/identifier> ?id .
+?resource <http://purl.jp/bio/12/glyco/glycan#in_glycan_database> ?pdb .
+VALUES ?pdb { <http://purl.jp/bio/12/glyco/glycan#Database_pdbe> <http://purl.jp/bio/12/glyco/glycan#Database_pdbj> <http://purl.jp/bio/12/glyco/glycan#Database_rcsb_pdb> }
+?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> glycan:Saccharide .
+?s <http://purl.jp/bio/12/glyco/glycan#has_resource_entry> ?resource .
+?s <http://purl.org/dc/terms/identifier> ?accNum .
+  VALUES ?accNum {"{{accessionNumber}}"}
+}

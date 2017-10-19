@@ -1,0 +1,28 @@
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "iupac",
+  "stanza:label": "IUPAC",
+  "stanza:definition": "IUPAC",
+  "stanza:parameter": [
+    {
+      "stanza:key": "acc",
+      "stanza:example": "G00051MO",
+      "stanza:description" : "Glycan accession number",
+      "stanza:required": true
+    }
+  ],
+  "stanza:usage": "<togostanza-iupac acc=\"G00051MO\"></togostanza-iupac>",
+  "stanza:type": "Stanza",
+  "stanza:context": "",
+  "stanza:display": "",
+  "stanza:provider": "provider of this stanza",
+  "stanza:license": "",
+  "stanza:author": "author name",
+  "stanza:address": "name@example.org",
+  "stanza:contributor": [
+  ],
+  "stanza:created": "2016-05-18",
+  "stanza:updated": "2016-05-18"
+}

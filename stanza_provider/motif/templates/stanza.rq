@@ -1,0 +1,13 @@
+PREFIX glycan:  <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan:  <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?MotifName ?moAccNum
+WHERE{
+	# Accession Number
+	VALUES ?accNum {"{{accessionNumber}}"}
+	?saccharide glytoucan:has_primary_id ?accNum .
+	?saccharide glycan:has_motif ?motif .
+	?motif rdfs:label ?motifLabel .
+	BIND((str(?motifLabel) AS ?MotifName))
+	BIND(STRAFTER(STR(?motif), "http://rdf.glycoinfo.org/glycan/") AS ?moAccNum)
+}

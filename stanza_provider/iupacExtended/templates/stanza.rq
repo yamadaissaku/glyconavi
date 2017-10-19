@@ -1,0 +1,15 @@
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?IUPAC_Extended
+WHERE {
+  # Accession Number
+  VALUES ?accNum {"{{accessionNumber}}"}
+  ?saccharide glytoucan:has_primary_id ?accNum .
+
+  # IUPAC_Extended 
+  ?saccharide glycan:has_glycosequence ?iupSeq .
+  ?iupSeq glycan:has_sequence ?seq .
+  BIND(STR(?seq) AS ?IUPAC_Extended)
+  ?iupSeq glycan:in_carbohydrate_format glycan:carbohydrate_format_iupac_extended .
+}

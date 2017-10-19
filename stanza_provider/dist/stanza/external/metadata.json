@@ -1,0 +1,29 @@
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "external",
+  "stanza:label": "External ID",
+  "stanza:definition": "External ID",
+  "stanza:parameter": [
+    {
+      "stanza:key": "acc",
+      "stanza:example": "G69508OK",
+      "stanza:example": "G48059CD",
+      "stanza:description" : "Glycan accession number",
+      "stanza:required": true
+    }
+  ],
+  "stanza:usage": "<togostanza-external acc=\"G48059CD\"></togostanza-external>",
+  "stanza:type": "Stanza",
+  "stanza:context": "",
+  "stanza:display": "",
+  "stanza:provider": "provider of this stanza",
+  "stanza:license": "",
+  "stanza:author": "author name",
+  "stanza:address": "name@example.org",
+  "stanza:contributor": [
+  ],
+  "stanza:created": "2016-04-14",
+  "stanza:updated": "2016-04-14"
+}

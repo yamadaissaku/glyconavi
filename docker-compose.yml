@@ -1,0 +1,73 @@
+version: '2'
+services:
+
+# glycoinfo-stanza
+  glycoinfo-stanza:
+    build: ./docker-glycoinfo-stanza
+    ports:
+      - "8082:8080"
+    volumes:
+    # the dockerfile uses /app/glytoucan-js-stanza so glytoucan-js-stanza should be in workspace
+      # - .:/app
+      - ./stanza_provider:/stanza/stanza_provider
+      - /etc/localtime:/etc/localtime
+    working_dir: /stanza/stanza_provider
+    restart: always
+
+# virtuoso
+  virtuoso:
+    build: ./virtuoso
+  #  restart: always
+    ports:
+      - "8890:8890"
+    volumes:
+#     - ./ttl:/usr/local/virtuoso-opensource/share/virtuoso/vad/
+      - ./ttl:/usr/local/virtuoso-opensource/ttl
+
+#nginx
+  nginx: 
+    build: ./nginx
+  #  restart: always
+    ports: 
+      - "80:80"
+      - "443:443"
+    links: 
+  #     - "docker-virtuoso-master"
+  #    - "centos-virtuoso"
+      - "virtuoso"
+    volumes:
+#      - ./www/glyconavi.github.io-master/startbootstrap:/var/www
+       - ./www:/var/www
+    networks:
+      - front-tier
+      - back-tier
+
+  redis:
+    image: redis
+    volumes:
+      - redis-data:/var/lib/redis
+    networks:
+      - back-tier
+      
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
+
+
+  #docker-virtuoso-master:
+  #  build: ./docker-virtuoso-master
+  #  ports:
+  #    - "8890:8890"
+
+
+
+
+
+      
+

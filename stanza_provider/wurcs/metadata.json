@@ -1,0 +1,28 @@
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "wurcs",
+  "stanza:label": "WURCS",
+  "stanza:definition": "WURCS",
+  "stanza:parameter": [
+    {
+      "stanza:key": "acc",
+      "stanza:example": "G00051MO",
+      "stanza:description" : "Glycan accession number",
+      "stanza:required": true
+    }
+  ],
+  "stanza:usage": "<togostanza-wurcs acc=\"G00051MO\"></togostanza-wurcs>",
+  "stanza:type": "Stanza",
+  "stanza:context": "",
+  "stanza:display": "",
+  "stanza:provider": "provider of this stanza",
+  "stanza:license": "",
+  "stanza:author": "author name",
+  "stanza:address": "name@example.org",
+  "stanza:contributor": [
+  ],
+  "stanza:created": "2016-04-14",
+  "stanza:updated": "2016-04-14"
+}

@@ -1,0 +1,21 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?entry_label ?external_id ?url ?from ?partner_url ?description
+WHERE{
+	VALUES ?accNum {"G48059CD"}
+	#VALUES ?accNum {"G61846BY"}
+	?saccharide glytoucan:has_primary_id ?accNum .
+
+	GRAPH ?graph {
+		?saccharide glycan:has_resource_entry ?entry .
+		?entry a glycan:Resource_entry .
+        ?entry rdfs:label ?entry_label .
+		?entry dcterms:identifier ?external_id .
+		?entry rdfs:seeAlso ?url .
+	}
+	?graph rdfs:label ?from.
+	?graph dcterms:description ?description .
+	?graph rdfs:seeAlso ?partner_url .
+} ORDER by ?from

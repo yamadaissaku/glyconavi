@@ -1,0 +1,122 @@
+<style>
+
+main {
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+}
+
+.entrySummary {
+	margin: 10px 0 0;
+	padding: 10px;
+	background: #FFF;
+}
+
+img {
+	display: block;
+}
+
+table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+	border: solid 2px #CCC;
+}
+
+th {
+	width: 25%;
+}
+
+th, td {
+	padding: 5px;
+	text-align: left;
+	border: solid 2px #CCC;
+	font-size: 14px;
+	line-height: 1.5;
+	font-weight: normal;
+}
+
+.citation {
+	margin: 5px 0;
+	padding: 0;
+}
+
+.citation_content {
+	display: none;
+	margin: 5px 0 10px;
+	padding: 20px;
+	background: #FFC;
+}
+
+.citation_content--show {
+	display: block;
+}
+
+.citation_text {
+	margin: 0;
+	padding: 0;
+	color: #787878;
+	font-size: 14px;
+}
+
+.citation_copy {
+	display: block;
+	width: 100px;
+	margin: 10px 0 0 auto;
+	padding: 0;
+	text-align: right;
+	color: #999;
+	font-size: 14px;
+	text-decoration: underline;
+}
+
+.citation_btn {
+	display: block;
+	width: 150px;
+	margin: 0 0 0 auto;
+	padding: 5px 0;
+	border: solid 2px #CCC;
+	background: #FFF;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.citation_btn:hover {
+	background: #EEE;
+}
+
+.stanzaNothingFound {
+	width: 100%;
+	float: none;
+	margin: 0;
+	padding: 15px 0;
+	color: #999;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+</style>
+<div class="entrySummary">
+{{#each data}}
+<img src="/glycans/{{AccNum.value}}/image?style=extended&amp;format=png&amp;notation={{notation}}">
+<div class="citation">
+	<a class="citation_btn" href="#">Cite this record</a>
+	<div class="citation_content">
+		<p class="citation_text">International Glycan Structure Repository. GlyTouCan; Accession Number={{AccNum.value}}, https://glytoucan.org/Structures/Glycans/{{AccNum.value}} (accessed {{date}}).</p>
+		<a class="citation_copy" href="#">Copy</a>
+	</div>
+</div>
+<table>
+	<tr><th>Accession number</th><td>{{AccNum.value}}</td></tr>
+	<tr><th>Calculated Monoisotopic Mass</th><td>{{Mass_label.value}}</td></tr>
+	<tr><th>IUPAC Extended</th><td>{{IUPAC_Extended.value}}</td></tr>
+	<tr><th>Created Date</th><td>{{CreateDate.value}}</td></tr>
+</table>
+{{/each}}
+{{#summaryNothingFound data}}{{/summaryNothingFound}}
+</div>

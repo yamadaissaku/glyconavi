@@ -1,0 +1,28 @@
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "CarbohydrateCrossReferences",
+  "stanza:label": "Carbohydrate cross references",
+  "stanza:definition": "Link of carbohydrate structure based on WURCS.",
+  "stanza:parameter": [
+      {
+      "stanza:key": "acc",
+      "stanza:example": "G71142DF",
+      "stanza:description" : "GlyTouCan Accession Number",
+      "stanza:required": true
+    }
+  ],
+  "stanza:usage": "<togostanza-CarbohydrateCrossReferences acc=\"G71142DF\"></togostanza-CarbohydrateCrossReferences>",
+  "stanza:type": "Stanza",
+  "stanza:context": "",
+  "stanza:display": "",
+  "stanza:provider": "glyconavi",
+  "stanza:license": "CC-BY",
+  "stanza:author": "issaku yamada",
+  "stanza:address": "yamadaissaku@gmail.com",
+  "stanza:contributor": [
+  ],
+  "stanza:created": "2016-10-26",
+  "stanza:updated": "2016-10-26"
+}
